@@ -1,0 +1,14 @@
+<?xml version='1.0' ?>
+<launch>
+    <!-- This is deprecated. The new sign segmentation is directly integrated to SignDetector -->
+    <arg name="visualize" default="False" />
+    <arg name="load_hyper_params" default="True" />
+    <arg name="start_node" default="True" />
+    <arg name="ns" default="/" />
+
+    <!-- load hyperparams to server -->
+    <param from="$(find minibot_vision)/launch/crop_sign_rosparams.yaml" if="$(arg load_hyper_params)" />
+
+    <node name="crop_sign" pkg="minibot_vision" exec="Crop_Sign.py" output="screen" args="$(arg visualize)" if="$(arg start_node)" ns="$(arg ns)" />
+
+</launch>

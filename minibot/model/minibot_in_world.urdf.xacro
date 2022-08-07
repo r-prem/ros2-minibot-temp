@@ -1,0 +1,24 @@
+<?xml version="1.0"?>
+<robot xmlns:xacro="http://ros.org/wiki/xacro" name="Minibot">
+  <!-- default we expect not using sim -->
+  <xacro:arg name="use_sim" default="false" />
+       
+  <xacro:include filename="$(find minibot)/model/minibot.urdf.xacro" />
+  <!-- Gazebo Configurations for minibot -->
+  <xacro:include filename="$(find minibot)/model/minibot.gazebo.xacro" />
+
+  <link name="base_link" />
+
+  <xacro:minibot name="minibot" parent="base_link">
+    <origin xyz="0.0 0.0 0.0"/>
+  </xacro:minibot>
+  <!--joint name="base_display_joint" type="fixed">
+    <parent link="base_display_link" />
+    <child link = "base_link" />
+    <origin xyz="0.0 0.0 0.0" rpy="0.0 0.0 0.0" />
+  </joint-->
+
+  <xacro:if value="$(arg use_sim)">
+    <xacro:gazebo_minibot />
+  </xacro:if>
+</robot>

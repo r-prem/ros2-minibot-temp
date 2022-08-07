@@ -1,0 +1,43 @@
+<?xml version="1.0"?>
+<launch>
+  <arg name="x_pos" default="0"/>
+  <arg name="y_pos" default="0"/>
+  <arg name="z_pos" default="0.0"/>
+  <arg name="use_sim" default="true" />
+  
+  <node name="joint_state_publisher" pkg="joint_state_publisher" exec="joint_state_publisher">
+    <param name="use_gui" value="true"/>
+    <param param="source_list">[/sphero_rvr/joint_states]</rosparam>
+  </node>
+
+  <param name="publish_frequency" value="100"/>
+  <node name="robot_state_publisher" pkg="robot_state_publisher" exec="robot_state_publisher" />
+  
+  <!-- Launch world with the traffic signs -->
+  <arg name="world_file"  value ="$(find minibot)/world/signs_world.sdf"/>
+
+  <!-- startup simulated world -->
+  <include file="$(find gazebo_ros)/launch/empty_world.launch">
+    <arg name="world_name" default="worlds/empty.world"/>
+    <arg name="paused" value="false"/>
+    <arg name="gui" value="true"/>
+    <!--arg name="world_name" value="$(arg world_file)"/-->
+  </include>
+  
+  <!-- send robot urdf to param server -->
+  <param name="robot_description" command="$(find xacro)/xacro $(find minibot)/model/minibot_in_world.urdf.xacro use_sim:=$(arg use_sim)" />
+  
+  <!-- push robot_description to factory and spawn robot in gazebo at the origin, change x,y,z arguments to spawn in a different position -->
+  <node pkg="gazebo_ros" exec="spawn_model" name="spawn_urdf" args="-urdf -model autorace -x $(arg x_pos) -y $(arg y_pos) -z $(arg z_pos) -param robot_description" output="screen" />
+  
+  
+  <!-- sphero rvr controller configurations -->
+  <param from="$(find sphero_rvr_hw)/config/sim_controllers.yaml"/>
+  
+  <!-- lss_4dof controller configurations -->
+  <param from="$(find lss_4dof_hw)/config/controllers.yaml"/>
+  <!-- does not work quite good ;-) rosparam command="load" file="$(find lss_4dof_hw)/config/sim_pid.yaml"/>-->
+
+  <!-- load the controllers in current namespace -->
+  <node name="controller_spawner" pkg="controller_manager" exec="spawner" respawn="false" output="screen"  args="joint_state_controller diff_drive_controller joint_trajectory_controller" />
+</launch>

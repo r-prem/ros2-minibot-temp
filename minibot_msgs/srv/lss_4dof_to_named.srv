@@ -1,0 +1,4 @@
+string name
+---
+moveit_msgs/MoveItErrorCodes error_code
+bool success

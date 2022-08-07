@@ -1,0 +1,4 @@
+geometry_msgs/poseStamped pose
+float32 width
+---
+bool success

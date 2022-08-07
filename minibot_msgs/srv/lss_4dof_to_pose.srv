@@ -1,0 +1,4 @@
+geometry_msgs/PoseStamped pose
+---
+moveit_msgs/MoveItErrorCodes error_code
+bool success

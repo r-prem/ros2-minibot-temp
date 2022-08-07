@@ -1,0 +1,106 @@
+<?xml version="1.0"?>
+<robot xmlns:xacro="http://ros.org/wiki/xacro" >
+  <xacro:arg name="use_sim" default="false" />
+
+  <xacro:include filename="$(find sphero_rvr_description)/model/sphero_rvr.urdf.xacro"/>
+  <xacro:include filename="$(find lss_4dof_description)/model/lss_4dof.urdf.xacro"/>
+  <xacro:include filename="$(find minibot)/model/d435.urdf.xacro" />
+
+
+
+  <!--link name="base_link" /-->
+
+
+
+  <xacro:macro name="minibot" params="parent name *origin">
+    <xacro:sphero_rvr name="sphero_rvr" parent="${parent}" sim="$(arg use_sim)">
+      <origin xyz="0.0 0.0 0.0"/>
+    </xacro:sphero_rvr>
+
+    <xacro:lss_4dof name="lss_4dof" parent="battery_holder_link" sim="$(arg use_sim)">
+      <origin xyz="0.0 -0.0465 0.019" rpy="0 0 ${M_PI/2}"/>
+    </xacro:lss_4dof>
+
+    <joint name="sphero_rvr_battery_joint" type="fixed">
+      <origin xyz="0 0.0465 0.0885" rpy="0 0 0"/>
+      <parent link="sphero_rvr_base_link"/>
+      <child link="battery_holder_link"/>
+    </joint> 
+
+    <link name="battery_holder_link">
+      <inertial>
+        <xacro:insert_block name="negligible_inertia"/>
+      </inertial>
+      <visual>
+        <origin xyz="0.0 0.0 0.0" rpy="0 0 0"/>
+        <geometry>
+          <mesh filename="package://minibot/meshes/battery_holder.stl" scale="0.001 0.001 0.001" /> 
+        </geometry>
+        <material name="White"/>
+      </visual>
+      <collision>
+        <origin xyz="0 -0.045 0.0" rpy="0 0 0"/>
+        <geometry>
+          <box size="0.18 0.13 0.03"/>
+        </geometry>
+      </collision>
+    </link>
+
+    <joint name="jetson_protection_joint" type="fixed">
+      <origin xyz="0 0.0 0.039" rpy="0 0 0"/>
+      <parent link="lss_4dof_base_link"/>
+      <child link="jetson_protection_link"/>
+    </joint>
+
+    <link name="jetson_protection_link">
+      <inertial>
+        <xacro:insert_block name="negligible_inertia"/>
+      </inertial>
+      <visual>
+        <origin xyz="0.0 0.0 0.0" rpy="0 0 0"/>
+        <geometry>
+          <mesh filename="package://minibot/meshes/jetson_protection.stl" scale="0.001 0.001 0.001" />
+        </geometry>
+        <material name="White"/>
+      </visual>
+      <collision>
+        <origin xyz="0.0 0.092 0.002" rpy="0 0 0"/>
+        <geometry>
+          <box size="0.11 0.068 0.003"/>
+        </geometry>
+      </collision>
+    </link>
+
+    <joint name="camera_mount_joint" type="fixed">
+      <origin xyz="0 0.0 0.0" rpy="0 0 0"/>
+      <parent link="lss_4dof_axis_4_link"/>
+      <child link="camera_mount_link"/>
+    </joint>
+
+    <link name="camera_mount_link">
+      <inertial>
+        <xacro:insert_block name="negligible_inertia"/>
+      </inertial>
+      <visual>
+        <origin xyz="0.0545 -0.0523 0.0385" rpy="0 0 ${M_PI/2}"/> 
+        <geometry>
+          <mesh filename="package://minibot/meshes/realsense_mount.stl" scale="0.001 0.001 0.001" />
+        </geometry>
+        <material name="Arm/White"/>
+      </visual>
+      <collision>
+        <origin xyz="0.0 0.0 0.0" rpy="0 0 0"/>
+        <geometry>
+          <box size="0.05 0.03 0.03"/>
+        </geometry>
+      </collision>
+    </link>
+
+
+  <xacro:sensor_d435 parent="camera_mount_link">
+    <origin xyz="0.0 0.022 0.055" rpy="0 -${M_PI/2} -${M_PI/2}"/> 
+  </xacro:sensor_d435>
+
+  </xacro:macro>
+
+</robot>

@@ -1,0 +1,10 @@
+<?xml version='1.0' ?>
+<launch>
+    <arg name="remote_node" default="True" />
+    <arg name="save_dir" default="/resources/training_imgs/" />      <!-- save dir relative to the minibot_vision package -->
+
+    <node name="capture_imgs" pkg="minibot_vision" exec="Capture_Images.py" output="screen" ns="$(env ROBOT)" >
+        <param name="remote_node" value="$(arg remote_node)" />
+        <param name="save_dir" value="$(arg save_dir)" />
+    </node>
+</launch>

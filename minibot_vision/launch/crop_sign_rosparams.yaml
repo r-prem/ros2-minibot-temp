@@ -1,0 +1,6 @@
+crop_sign:
+  circularity: 0.77
+  thickness: 22
+  circle_filter: 5
+  canny1: 60
+  canny2: 50

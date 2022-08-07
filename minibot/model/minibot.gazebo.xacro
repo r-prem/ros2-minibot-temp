@@ -1,0 +1,90 @@
+<?xml version="1.0"?>
+<robot xmlns:xacro="http://ros.org/wiki/xacro" >
+    <xacro:macro name="gz_wheel" params="link">
+        <xacro:property name="mu1" value="0.848" /><!-- 1: perfekt: 0.85-->
+        <xacro:property name="mu2" value="0.06" /><!-- 0.07f-->
+        <xacro:property name="kp" value="1e25" />
+        <xacro:property name="kd" value="1e20" />
+        <xacro:property name="minDepth" value="0.001" />
+        <xacro:property name="maxVel" value="0.1" />
+        <xacro:property name="fdir1" value="1 0 0" />
+
+        <gazebo reference="${link}">
+            <mu1>${mu1}</mu1>
+            <mu2>${mu2}</mu2>
+            <kp>${kp}</kp>
+            <kd>${kd}</kd>
+            <minDepth>${minDepth}</minDepth>
+            <maxVel>${maxVel}</maxVel>
+            <fdir1>${fdir1}</fdir1>
+            <material>Gazebo/White</material>
+        </gazebo>
+    </xacro:macro>
+    <xacro:macro name="gazebo_minibot">
+        <!-- Load RealSense Gazebo Plugin Configuration -->
+        <xacro:include filename="$(find minibot)/model/d435.gazebo.xacro" />
+
+        <!-- Joints Control in Gazebo -->
+        <gazebo>
+            <plugin name="libgazebo_ros_control" filename="libgazebo_ros_control.so">
+            </plugin>
+        </gazebo>
+        
+        <!-- Physics Sim pros for wheels (just dummy values)-->
+        <!-- Working: mu1: 3.2 and mu2: 0.1 -->
+        <!--<xacro:property name="mu1" value="0" />
+        <xacro:property name="mu2" value="0" />
+        <xacro:property name="kp" value="1e20" />
+        <xacro:property name="kd" value="1e10" />
+        <xacro:property name="minDepth" value="0.001" />
+        <xacro:property name="maxVel" value="0.1" />
+        <xacro:property name="fdir1" value="1 0 0" />-->
+        <!--gazebo reference="sphero_rvr_wheel_fl_link">
+            <mu1>${mu1}</mu1>
+            <mu2>${mu2}</mu2>
+            <kp>${kp}</kp>
+            <kd>${kd}</kd>
+            <minDepth>${minDepth}</minDepth>
+            <maxVel>${maxVel}</maxVel>
+            <fdir1>${fdir1}</fdir1>
+            <material>Gazebo/White</material>
+        </gazebo>
+        
+        <gazebo reference="sphero_rvr_wheel_fr_link">
+            <mu1>${mu1}</mu1>
+            <mu2>${mu2}</mu2>
+            <kp>${kp}</kp>
+            <kd>${kd}</kd>
+            <minDepth>${minDepth}</minDepth>
+            <maxVel>${maxVel}</maxVel>
+            <fdir1>${fdir1}</fdir1>
+            <material>Gazebo/White</material>
+        </gazebo>
+        
+        <gazebo reference="sphero_rvr_wheel_rl_link">
+            <mu1>${mu1}</mu1>
+            <mu2>${mu2}</mu2>
+            <kp>${kp}</kp>
+            <kd>${kd}</kd>
+            <minDepth>${minDepth}</minDepth>
+            <maxVel>${maxVel}</maxVel>
+            <fdir1>${fdir1}</fdir1>
+            <material>Gazebo/White</material>
+        </gazebo>
+        
+        <gazebo reference="sphero_rvr_wheel_rr_link">
+            <mu1>${mu1}</mu1>
+            <mu2>${mu2}</mu2>
+            <kp>${kp}</kp>
+            <kd>${kd}</kd>
+            <minDepth>${minDepth}</minDepth>
+            <maxVel>${maxVel}</maxVel>
+            <fdir1>${fdir1}</fdir1>
+            <material>Gazebo/White</material>
+        </gazebo>-->
+        <xacro:gz_wheel link="sphero_rvr_wheel_fl_link" />
+        <xacro:gz_wheel link="sphero_rvr_wheel_fr_link" />
+        <xacro:gz_wheel link="sphero_rvr_wheel_rl_link" />
+        <xacro:gz_wheel link="sphero_rvr_wheel_rr_link" />
+    </xacro:macro>
+</robot>
